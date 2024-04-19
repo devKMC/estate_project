@@ -37,11 +37,13 @@
 # email : VARCHAR(100) PK
 # auth_number : VARCHAR(4) NN
 
-# - 게시물 (접수번호, 상태, 제목,내용 , 작성자, 작성일, 조회수, 내용, 답변)
-# table name : board 
+# - 게시물 (접수번호, 상태, 제목, 내용, 작성자, 작성일, 조회수, 답변)
+# table name : board
 # reception_number : INT PK AI
-# status : BOOLEAN NN DEFAULT (false)
-# title : VARCHAR(100) NN 
+# status : BOOLEAN NN DEFAULT(false)
+# title : VARCHAR(100) NN
 # contents : TEXT NN
-# writer_id :  VARCHAR(50) NN FK user(user_id) // 관계에 맞춰 값을 정해야 함
-# write_datetime : 
+# writer_id : VARCHAR(50) NN FK user(user_id)
+# write_datetime : DATETIME NN DEFAULT(now()) 
+# view_count : INT NN DEFAULT(0)
+# comment : TEXT 
