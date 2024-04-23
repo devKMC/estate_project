@@ -1,3 +1,4 @@
+-- Active: 1706776141384@@127.0.0.1@3306@estate
 -- # Entity
 #- 사용자
 #- 이메일 인증번호
@@ -34,7 +35,7 @@
 
 # 이메일 인증번호 (이메일,인증번호)
 # table name : email_auth_number
-# email : VARCHAR(100) PK
+# email : VARCHAR(100) PK NN
 # auth_number : VARCHAR(4) NN
 
 # - 게시물 (접수번호, 상태, 제목, 내용, 작성자, 작성일, 조회수, 답변)
@@ -47,3 +48,8 @@
 # write_datetime : DATETIME NN DEFAULT(now()) 
 # view_count : INT NN DEFAULT(0)
 # comment : TEXT 
+
+## 데이터 베이스 생성 
+## 컨트롤 엔터로 실행 (각행)
+CREATE DATABASE estate;
+USE estate;
