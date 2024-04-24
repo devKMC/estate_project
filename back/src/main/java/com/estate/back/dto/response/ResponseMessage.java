@@ -15,7 +15,7 @@ package com.estate.back.dto.response;
 // Response의 공통된 nessage 값
 public interface ResponseMessage {
     String SUCCESS = "Success";
-    String VALIDATION_FAILED = "varidation Faile";
+    String VALIDATION_FAILED = "Validation Failed";
     String DUPLICATIED_ID = "Duplicated idl";
     String DUPLICATIED_EMAIL = "Sign in Failed";
     String SIGN_INFAILED = "Sign in Faile";

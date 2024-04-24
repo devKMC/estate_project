@@ -25,11 +25,11 @@ public class JwtProvider {
     @Value("{jwt.secret-key }")
     private String secretKey;
 
-    private Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-
     // JWT 생성 메서드
     // JWT 생성할때 userId를 사용
     public String create(String userId) {
+
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         // 만료시간 = 현재시간 + 10시간
         Date expiredDate = Date.from(Instant.now().plus(10, ChronoUnit.HOURS));
@@ -49,22 +49,23 @@ public class JwtProvider {
     // JWT 검증 메서드
     public String validate(String jwt) {
 
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+
         String userId = null; // 반환할 변수 생성
 
         try {
             // 키가 일치한다면
             userId = Jwts.parserBuilder()
-                .setSigningKey(key) 
-                .build()  // 여기까지가 열쇠 만드는 작업
-                .parseClaimsJws(jwt)
-                .getBody()
-                .getSubject();
+                    .setSigningKey(key)
+                    .build() // 여기까지가 열쇠 만드는 작업
+                    .parseClaimsJws(jwt)
+                    .getBody()
+                    .getSubject();
         } catch (Exception exception) {
             exception.printStackTrace(); // 예외가 발생한다면
             return null;
         }
-        return userId;  // 검증이 끝나면 user ID 반환
+        return userId; // 검증이 끝나면 user ID 반환
     }
-
 
 }
