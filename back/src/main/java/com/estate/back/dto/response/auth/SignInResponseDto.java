@@ -24,7 +24,6 @@ public class SignInResponseDto extends ResponseDto {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
         this.accessToken = accessToken;
         this.expires = 10 * 60 * 60; // 시간 , 분 , 초 provider jwt에 작성된 기준으로
-
     }
 
     public static ResponseEntity<SignInResponseDto> success(String accessToken) {
