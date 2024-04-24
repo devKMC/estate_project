@@ -10,4 +10,6 @@ import com.estate.back.entity.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity,String> {
     UserEntity findByUserId(String userId);
+
+    
 }
