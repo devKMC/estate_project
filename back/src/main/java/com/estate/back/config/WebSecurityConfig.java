@@ -9,52 +9,60 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+
+import com.estate.back.filter.JwtAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
 
 //  Spring Web Security 설정
 // - Basic 인증 미사용 으로 변경
 // - CSRF 정책 미사용
 // - Session 생성 정책 미사용
 // - CORS 정책 (모든 출처 - 모든 메서드 - 모든 패턴 허용)
-
+// - JwtAuthenticationFilter 추가 ( UsernamePasswordAuthenticationFilter 이전에 추가 )  
 @Configurable
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    @Bean
-    protected SecurityFilterChain configure(HttpSecurity httpSecurity)
-            throws Exception {
-        httpSecurity
-                .httpBasic(HttpBasicConfigurer::disable) //Basic 미사용
-                .csrf(CsrfConfigurer::disable) //CSRF 미사용
-                .sessionManagement(sessionManagement -> sessionManagement // 받아온 sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> cors
-                        .configurationSource(corsConfigurationSource())
-                        );
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+        @Bean
+        protected SecurityFilterChain configure(HttpSecurity httpSecurity)
+                        throws Exception {
+                httpSecurity
+                                .httpBasic(HttpBasicConfigurer::disable) // Basic 미사용
+                                .csrf(CsrfConfigurer::disable) // CSRF 미사용
+                                .sessionManagement(sessionManagement -> sessionManagement // 받아온 sessionManagement
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .cors(cors -> cors
+                                                .configurationSource(corsConfigurationSource()))
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return httpSecurity.build(); // 적용
-    }
+        }
 
-    // Cors 정책 설정
-    // CORS 정책 (모든 출처 - 모든 메서드 - 모든 패턴 허용)
+        // Cors 정책 설정
+        // CORS 정책 (모든 출처 - 모든 메서드 - 모든 패턴 허용)
 
-    @Bean
-    protected CorsConfigurationSource corsConfigurationSource() {
+        @Bean
+        protected CorsConfigurationSource corsConfigurationSource() {
 
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*"); // * 모든것 허용
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.addAllowedOrigin("*"); // * 모든것 허용
+                configuration.addAllowedHeader("*");
+                configuration.addAllowedMethod("*");
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration);
 
-        return source;
+                return source;
 
-    }
+        }
 }

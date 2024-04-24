@@ -9,5 +9,5 @@ import com.estate.back.entity.UserEntity;
 // JPA 레포지토리를 쓰고있기 때문에 JpaRepository<클래스,기본키로 지정한 값의 타입> 확장해줘야함
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity,String> {
-
+    UserEntity findByUserId(String userId);
 }
