@@ -1,6 +1,8 @@
 package com.estate.back.service.implimentation;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.estate.back.common.util.EmailAuthNumberUtill;
@@ -12,6 +14,7 @@ import com.estate.back.dto.request.auth.SignUpRequestDto;
 import com.estate.back.dto.response.ResponseDto;
 import com.estate.back.dto.response.auth.SignInResponseDto;
 import com.estate.back.entity.EmailAuthNumberEntity;
+import com.estate.back.entity.UserEntity;
 import com.estate.back.provider.MailProvider;
 import com.estate.back.repository.EmailAuthNumberRepository;
 import com.estate.back.repository.UserRepository;
@@ -30,6 +33,9 @@ public class AuthServiceImplimentation implements AuthService{
     private final UserRepository userRepository;
     private final EmailAuthNumberRepository emailAuthNumberrepository;
     private final MailProvider mailProvider;
+
+    // 패스워드 암호화를 하기 위해 password 인코더
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
     @Override
@@ -81,7 +87,7 @@ public class AuthServiceImplimentation implements AuthService{
         
         }catch (MessagingException exception){
             exception.printStackTrace();
-            return ResponseDto.mailSendFailed();
+            return ResponseDto.mailSendFailed(); // 예외 에러 반환
 
         }
 
@@ -95,14 +101,59 @@ public class AuthServiceImplimentation implements AuthService{
 
     @Override
     public ResponseEntity<ResponseDto> emailAuthCheck(EmailAuthCheckRequestDto dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'emailAuthCheck'");
+
+            try{
+
+                String userEmail = dto.getUserEmail();
+                String userNumber = dto.getAuthNumber();
+
+                // 데이터베이스의 email_auth_number 테이블에서 해당하는 userEmail과 authNumber를 모두 가지고 있는 데이터가 있는지 확인  
+                boolean isMathched = emailAuthNumberrepository.existsByEmailAndAuthNumber(userEmail, userNumber);
+                // 해당하는 데이터가 없다면 'AF' 응답 처리 
+                if(!isMathched) return ResponseDto.authenticationFailed(); 
+
+            }catch (Exception exception){
+                exception.printStackTrace();
+                return ResponseDto.databaseError();
+            }
+            // try를 거치고 문제가 없다면 성공 처리
+            return ResponseDto.success();
     }
 
     @Override
     public ResponseEntity<ResponseDto> SignUp(SignUpRequestDto dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'SignUp'");
+
+        try{
+            //(userId, userPassword, userEmail, authNumber)  유효성검사가 끝나고 SIGNUP DTO에 있는것들 꺼내오기
+            String userId = dto.getUserId();
+            String userPassword = dto.getUserPassword();
+            String userEmail = dto.getUserEmail();
+            String authNumber = dto.getAuthNumber();
+
+            // 리포지토리에서 가져옴
+            boolean existedUser = userRepository.existsByUserId(userId);
+            // 해당하는 데이터가 없다면 에러 처리
+            if (existedUser) return ResponseDto.duplicatedId();
+
+            boolean existedEmail= userRepository.existsByUserEmail(userEmail);
+            if(existedEmail) return ResponseDto.duplicatedEmail();
+
+            //  데이터베이스의 email_auth_number 테이블에서 해당하는 userEmail과 authNumber를 모두 가지고 있는 데이터가 있는지 확인  
+            boolean isMathched = emailAuthNumberrepository.existsByEmailAndAuthNumber(userEmail, authNumber);
+            // 만약 FALSE 라면
+            if(!isMathched) return ResponseDto.authenticationFailed();
+
+            // 사용자로부터 입력받은 userPassword를 암호화  
+            String encodedPassword = passwordEncoder.encode(userPassword);
+
+            // 사용자로부터 입력받은 userId, userEmail과 암호화한 password, 지정된 권한, 가입경로를 사용하여 데이터베이스의 user 테이블에 레코드를 삽입  
+            // 엔터티 만들기
+            UserEntity userEntity = new UserEntity(); 
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
     }
     
 }

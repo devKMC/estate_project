@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.estate.back.dto.request.auth.EmailAuthCheckRequestDto;
 import com.estate.back.dto.request.auth.EmailAuthRequestDto;
 import com.estate.back.dto.request.auth.IdCheckRequestDto;
 import com.estate.back.dto.response.ResponseDto;
@@ -38,6 +39,17 @@ public class AuthController {
         @RequestBody @Valid EmailAuthRequestDto requestBody
     ){
         ResponseEntity<ResponseDto> response = authService.emailAuth(requestBody);
+        return response;
+    }
+
+    // 이메일 인증 확인
+    @PostMapping("/email-auth/check")
+    // body의 형태가 responseDto
+    public ResponseEntity<ResponseDto> emailAuthCheck(
+                // @RequestBody로 받기 위해 ,valid = 유효성 검사
+                @RequestBody @Valid EmailAuthCheckRequestDto requsetBody
+    ){
+        ResponseEntity<ResponseDto> response = authService.emailAuthCheck(requsetBody);
         return response;
     }
 }
