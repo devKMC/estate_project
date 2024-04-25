@@ -3,8 +3,13 @@ package com.estate.back.service.implimentation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.estate.back.dto.request.auth.EmailAuthCheckRequestDto;
+import com.estate.back.dto.request.auth.EmailAuthRequestDto;
 import com.estate.back.dto.request.auth.IdCheckRequestDto;
+import com.estate.back.dto.request.auth.SignInRequestDto;
+import com.estate.back.dto.request.auth.SignUpRequestDto;
 import com.estate.back.dto.response.ResponseDto;
+import com.estate.back.dto.response.auth.SignInResponseDto;
 import com.estate.back.repository.UserRepository;
 import com.estate.back.service.AuthService;
 
@@ -37,6 +42,43 @@ public class AuthServiceImplimentation implements AuthService{
         }
 
         return ResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super SignInResponseDto> signIn(SignInRequestDto dto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'signIn'");
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto> emailAuth(EmailAuthRequestDto dto) {
+
+        try{
+
+            // 레포지토리에서 existByuserEmail 작업 해주고
+            String userEmail = dto.getUserEmail();
+            boolean existedEmail = userRepository.existByuserEmail(userEmail);
+
+            // 존재한다면
+            if (existedEmail) return ResponseDto.duplicatedEmail();
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError(); // 예외 에러 반환
+        }
+            return ResponseDto.success(); // 성공 반환
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto> emailAuthCheck(EmailAuthCheckRequestDto dto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'emailAuthCheck'");
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto> SignUp(SignUpRequestDto dto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'SignUp'");
     }
     
 }
