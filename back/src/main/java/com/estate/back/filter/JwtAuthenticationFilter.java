@@ -43,7 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
+    // * 여기까지는 외울 필요 없음.
+    
         try {
 
             // Request 객체에서 Bearer 토큰 값 가져오기
