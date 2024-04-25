@@ -22,30 +22,36 @@ import io.jsonwebtoken.security.Keys;
 public class JwtProvider {
 
     // 비밀키 작업
-    @Value("{jwt.secret-key }")
+    @Value("${jwt.secret-key}")
     private String secretKey;
 
     // JWT 생성 메서드
     // JWT 생성할때 userId를 사용
     public String create(String userId) {
 
-        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         // 만료시간 = 현재시간 + 10시간
         Date expiredDate = Date.from(Instant.now().plus(10, ChronoUnit.HOURS));
+        
+        String jwt = null;
+        try{
+            // 예외가 발생 할 수 있어 트라이 캐치문 작성
+            Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
-        // JWT 만들기
-        String jwt = Jwts.builder()
-                .signWith(key, SignatureAlgorithm.HS256)
-                .setSubject(userId) // 주체
-                .setIssuedAt(new Date()) // 생성시간
-                .setExpiration(expiredDate) // 완료시간
-                .compact(); // 인코딩
-
+            // JWT 만들기
+                jwt = Jwts.builder()
+                    .signWith(key, SignatureAlgorithm.HS256)
+                    .setSubject(userId) // 주체
+                    .setIssuedAt(new Date()) // 생성시간
+                    .setExpiration(expiredDate) // 완료시간
+                    .compact(); // 인코딩
+        
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return null;
+        }
         return jwt;
-
     }
-
     // JWT 검증 메서드
     public String validate(String jwt) {
 

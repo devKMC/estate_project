@@ -18,6 +18,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
+
+// 여기까지 작성 후 유저 엔터티로 레포지토리 생성
+
 public class UserEntity {
 
     // 데이터베이스에 5개의 컬럼이 존재함
@@ -30,8 +33,11 @@ public class UserEntity {
 
     // 새로운 생성자 작성 (implement 서비스에서 쓰기 위해)
     public UserEntity(SignUpRequestDto dto){
-        
+        this.userId = dto.getUserId();
+        this.userPassword = dto.getUserPassword();
+        this.userEmail = dto.getUserEmail();
+        this.userRole = "ROLE_USER";
+        this.joinPath = "HOME";
     }
 }
 
-// 유저 엔터티로 레포지토리 생성
