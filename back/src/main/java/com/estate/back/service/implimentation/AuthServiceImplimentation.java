@@ -3,6 +3,7 @@ package com.estate.back.service.implimentation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.estate.back.common.util.EmailAuthNumberUtill;
 import com.estate.back.dto.request.auth.EmailAuthCheckRequestDto;
 import com.estate.back.dto.request.auth.EmailAuthRequestDto;
 import com.estate.back.dto.request.auth.IdCheckRequestDto;
@@ -10,9 +11,13 @@ import com.estate.back.dto.request.auth.SignInRequestDto;
 import com.estate.back.dto.request.auth.SignUpRequestDto;
 import com.estate.back.dto.response.ResponseDto;
 import com.estate.back.dto.response.auth.SignInResponseDto;
+import com.estate.back.entity.EmailAuthNumberEntity;
+import com.estate.back.provider.MailProvider;
+import com.estate.back.repository.EmailAuthNumberRepository;
 import com.estate.back.repository.UserRepository;
 import com.estate.back.service.AuthService;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 // Auth 모듈의 비즈니스 로직 구현체
@@ -23,6 +28,9 @@ import lombok.RequiredArgsConstructor;
 public class AuthServiceImplimentation implements AuthService{
 
     private final UserRepository userRepository;
+    private final EmailAuthNumberRepository emailAuthNumberrepository;
+    private final MailProvider mailProvider;
+
 
     @Override
     public ResponseEntity<ResponseDto> idCheck(IdCheckRequestDto dto) {
@@ -57,16 +65,32 @@ public class AuthServiceImplimentation implements AuthService{
 
             // 레포지토리에서 existByuserEmail 작업 해주고
             String userEmail = dto.getUserEmail();
-            boolean existedEmail = userRepository.existByuserEmail(userEmail);
-
+            boolean existedEmail = userRepository.existsByUserEmail(userEmail);
             // 존재한다면
             if (existedEmail) return ResponseDto.duplicatedEmail();
 
-        }catch (Exception exception){
+            String authNumber = EmailAuthNumberUtill.createCodeNumber();
+            
+            // 바로 위에서 받은 인증번호 저장하려면 엔터티를 만들어 줘야 함
+            EmailAuthNumberEntity emailAuthNumberEntity = new EmailAuthNumberEntity(userEmail,authNumber);
+
+            // 그 다음 save 작업 해줘야 함 그러기 위해서는  public 선언해주고 emailAuthNumberEntity 저장
+            emailAuthNumberrepository.save(emailAuthNumberEntity);
+
+            mailProvider.mailAuthSend(userEmail,authNumber);
+        
+        }catch (MessagingException exception){
+            exception.printStackTrace();
+            return ResponseDto.mailSendFailed();
+
+        }
+
+        catch (Exception exception){
             exception.printStackTrace();
             return ResponseDto.databaseError(); // 예외 에러 반환
         }
-            return ResponseDto.success(); // 성공 반환
+            
+        return ResponseDto.success(); // 성공 반환
     }
 
     @Override
