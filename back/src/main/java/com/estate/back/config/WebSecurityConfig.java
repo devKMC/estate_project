@@ -14,8 +14,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
 import com.estate.back.filter.JwtAuthenticationFilter;
+import com.estate.back.handler.OAuth2SuccessHandler;
+import com.estate.back.service.implimentation.OAuth2UserServiceImplementation;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 public class WebSecurityConfig {
 
         private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final OAuth2UserServiceImplementation oAuth2UserService;
+        private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
         @Bean
         protected SecurityFilterChain configure(HttpSecurity httpSecurity)
@@ -43,9 +46,13 @@ public class WebSecurityConfig {
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .cors(cors -> cors
                                                 .configurationSource(corsConfigurationSource()))
-                                .oauth2Login(oauth2 -> oauth2
+                                .oauth2Login(oauth2 -> oauth2 
+                                // 카카오 네이버 API 경로 관련
                                 .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/oauth2"))
+                                // 콜백 주소 지정
                                         .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
+                                        .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
+                                        .successHandler(oAuth2SuccessHandler)
                                 )
                                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
