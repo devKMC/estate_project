@@ -193,7 +193,7 @@ function SignUp({ onLinkClickHandler }: Props) {
             result.code === 'DBE' ? '서버에 문제가 있습니다' :''
 
         const isSuccess = result && result.code ==='SU';
-        if (isSuccess){
+        if (!isSuccess){
             alert(message);
             return;
         }
