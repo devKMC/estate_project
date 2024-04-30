@@ -52,7 +52,7 @@ public class OAuth2UserServiceImplementation extends DefaultOAuth2UserService {
             // 데이터베이스에 존재하는지 검사하는 코드
             boolean isExistUser = userRepository.existsByUserId(userId);
             if (!isExistUser){
-                //* */ 임시 작업 (실제로는 더 많은 구현이 필요함)
+                //*  임시 작업 (실제로는 더 많은 구현이 필요함)
                 String email = id + "@" + oauthClientName.toLowerCase() + ".com";
                 String password = passwordEncoder.encode(id);
                 
