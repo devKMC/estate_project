@@ -63,7 +63,7 @@ public class JwtProvider {
             // 키가 일치한다면
             userId = Jwts.parserBuilder()
                     .setSigningKey(key)
-                    .build() // 여기까지가 열쇠 만드는 작업
+                    .build() // 유효성 검사
                     .parseClaimsJws(jwt)
                     .getBody()
                     .getSubject();
