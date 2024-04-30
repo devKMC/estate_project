@@ -7,6 +7,6 @@ import com.estate.back.dto.response.user.GetSignInUserResponseDto;
 
 @Service
 public interface UserService {
-    ResponseEntity<? super GetSignInUserResponseDto> getSignInUser (String userId);
+    ResponseEntity<? super GetSignInUserResponseDto> getSignInUser (String userId); 
 }
 
