@@ -1,5 +1,12 @@
 package com.estate.back.entity;
 
+//8 (게시판) Date 임포트
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
+
+import com.estate.back.dto.request.board.PostBoardRequestDto;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,4 +35,24 @@ public class BoardEntity {
     private String writeDatetime;
     private Integer viewCount;
     private String comment;
+
+    // 7 (게시판)
+    public BoardEntity(PostBoardRequestDto dto, String userId){
+        // 9 (게시판)
+        Date now = Date.from(Instant.now());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String writeDatetime = simpleDateFormat.format(now);
+
+
+        this.status = false;
+        this.title = dto.getTitle(); // 클라이언트로 부터 받아야 할 것들  1
+        this.contents = dto.getContents(); //받아야 할것들 2
+        this.writerId = userId;
+        
+
+        this.viewCount = 0;
+        // 10 (게시판)
+        this.writeDatetime = writeDatetime;
+        
+    }
 }
