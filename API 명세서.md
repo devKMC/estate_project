@@ -618,3 +618,115 @@ Content-Type: application/json;charset=UTF-8
 ```
 
 ***
+
+
+
+<h2 style='background-color: rgba(55, 55, 55, 0.2); text-align: center'>Board 모듈</h2>
+
+Q&A 게시물과 관련된 REST API 모듈 
+
+- url : /api/v1/board   
+
+***
+
+#### - Q&A 게시물 작성
+
+##### 설명
+
+클라이언트로부터 Request Header의 Authorization 필드로 Bearer 토큰을 포함하여 제목, 내용을 입력받고
+작성에 성공하면 성공 처리를 합니다. 만약 작성에 실패하면 실패처리됩니다.
+인가 실패, 데이터베이스 에러, 받아오는 데이터 (타이틀,내용)에 대한 유효성 검사 실패가 발생할 수 있습니다.
+
+- method : **POST**  
+- URL : **/**  
+
+##### Request
+
+###### Header
+
+| name | description | required |
+|---|:---:|:---:|
+| Authorization | 인증에 사용된 bearer 토큰 | 0 |
+
+###### Request 
+
+
+###### Example
+
+```bash
+curl -v -X POST "http://localhost:4000/api/v1/user/" \
+ -H "Authorization :bearer {JWT}" \
+```
+
+##### Response
+
+###### Header
+
+| name | description | required |
+|---|:---:|:---:|
+| Content-Type | 반환하는 Response Body의 Content Type (application/json) | O |
+
+###### Response Body
+
+| name | type | description | required |
+|---|:---:|:---:|:---:|
+| code | String | 사용자의 아이디 | O |
+| message | String | 사용자의 비밀번호 | O |
+| userId | String | 사용자의 아이디 | O |
+| userRole | int | 사용자의 권한 | O |
+
+###### Example
+
+**응답 성공**
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "SU",
+  "message": "Success.",
+  "userId": "${userId}",
+  "userRole": "${userRole}"
+}
+```
+
+**응답 : 실패 (인가 실패)**
+```bash
+HTTP/1.1 403 Forbidden
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "AF",
+  "message": "Authorization Failed."
+}
+```
+
+**응답 : 실패 (인증 실패)**
+```bash
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "AF",
+  "message": "Authentication Failed."
+}
+```
+
+**응답 : 실패 (데이터베이스 오류)**
+```bash
+HTTP/1.1 500 Internal Server Error
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "DBE",
+  "message": "DataBase Error."
+}
+```
+
+**응답 : 실패 (데이터베이스 오류)**
+```bash
+HTTP/1.1 500 Database Error
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "DBE",
+  "message": "Database Error."
+}
+```
+
+***
