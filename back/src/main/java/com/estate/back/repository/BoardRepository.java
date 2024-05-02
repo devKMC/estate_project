@@ -12,5 +12,5 @@ import com.estate.back.entity.BoardEntity;
 // 보드의 엔티티에 기본키를 보면 Integer로 설정되어 있음.
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity,Integer> {
-    List<BoardEntity> findByorderByReceptionNumberDesc();
+    List<BoardEntity> findByOrderByReceptionNumberDesc();
 }

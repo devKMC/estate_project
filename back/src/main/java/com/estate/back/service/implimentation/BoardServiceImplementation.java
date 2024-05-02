@@ -55,7 +55,7 @@ public class BoardServiceImplementation implements BoardService {
 
         try {
             List<BoardEntity> boardEntities = boardRepository.
-            findByorderByReceptionNumberDesc();
+            findByOrderByReceptionNumberDesc();
 
             return GetBoardListResponseDto.success(boardEntities);
         }catch (Exception exception){

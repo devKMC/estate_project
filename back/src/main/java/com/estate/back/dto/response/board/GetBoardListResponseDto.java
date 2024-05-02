@@ -11,6 +11,9 @@ import com.estate.back.dto.response.ResponseDto;
 import com.estate.back.dto.response.ResponseMessage;
 import com.estate.back.entity.BoardEntity;
 
+import lombok.Getter;
+
+@Getter
 public class GetBoardListResponseDto extends ResponseDto{
 
     private List<BoardListItem> boardList;
