@@ -1,10 +1,13 @@
 package com.estate.back.service.implimentation;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.estate.back.dto.request.board.PostBoardRequestDto;
 import com.estate.back.dto.response.ResponseDto;
+import com.estate.back.dto.response.board.GetBoardListResponseDto;
 import com.estate.back.entity.BoardEntity;
 import com.estate.back.repository.BoardRepository;
 import com.estate.back.repository.UserRepository;
@@ -23,6 +26,7 @@ public class BoardServiceImplementation implements BoardService {
 
     @Override
     public ResponseEntity<ResponseDto> postBoard(PostBoardRequestDto dto, String userId) {
+    
 
         try{
             boolean isExistUser = userRepository.existsById(userId); //3. userId의 존재검증 코드
@@ -43,6 +47,22 @@ public class BoardServiceImplementation implements BoardService {
 
         // 성공 내보내기
         return ResponseDto.success();
+    }
+
+
+    @Override
+    public ResponseEntity<? super GetBoardListResponseDto> getBoardList() {
+
+        try {
+            List<BoardEntity> boardEntities = boardRepository.
+            findByorderByReceptionNumberDesc();
+
+            return GetBoardListResponseDto.success(boardEntities);
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
     }
 
 
