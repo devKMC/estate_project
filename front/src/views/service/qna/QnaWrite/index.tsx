@@ -3,6 +3,9 @@ import './style.css'
 import { useUserStore } from 'src/stores';
 import { useNavigate } from 'react-router';
 import { QNA_LIST_ABSOLUTE_PATH } from 'src/constant';
+import { PostBoardRequestDto } from 'src/apis/board/dto/request';
+import { PostBoardRequest } from 'src/apis/board';
+import { useCookies } from 'react-cookie';
 
 
 
@@ -11,6 +14,7 @@ export default function QnAWrite() {
     //                              state                              //
     const contentsRef = useRef<HTMLTextAreaElement | null>(null);
     const { loginUserRole } = useUserStore();
+    const [cookies] = useCookies();
     const [title, setTitle] = useState<string>('');
     const [contents, setContents] = useState<string>('');
 
@@ -36,9 +40,18 @@ export default function QnAWrite() {
 
     const onPostButtonClickHandler = () => {
         if (!title || !contents) return; // 비어있으면 return
-        alert('작성!')
+        if (cookies.accessToken) return;
+
+        const requestBody: PostBoardRequestDto= {
+            title,
+            contents
+        }
+
+        PostBoardRequest(requestBody,cookies.accessToken).then();
 
     };
+
+
 
     //                              effect                              //
     // 화면이 전환될때 작성
@@ -47,9 +60,10 @@ export default function QnAWrite() {
         if (loginUserRole === 'ROLE_ADMIN') {
             navigator(QNA_LIST_ABSOLUTE_PATH);
             return;
+            
         }
 
-    }, [])
+    }, [loginUserRole])
 
     //                              render                              //
     return (
