@@ -1,21 +1,74 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css'
 import { useUserStore } from 'src/stores';
 import { useNavigate } from 'react-router';
-import { QNA_WRITE_ABSOLUTE_PATH } from 'src/constant';
+import { AUTH_ABSOLUTE_PATH, COUNT_PER_PAGE, COUNT_PER_SECTION, QNA_WRITE_ABSOLUTE_PATH } from 'src/constant';
+import { BoardListItem } from 'src/types';
+import { getBoardListRequest } from 'src/apis/board';
+import { useCookies } from 'react-cookie';
+import { GetBoardListResponseDto } from 'src/apis/board/dto/response';
+import ResponseDto from 'src/apis/response.dto';
 
 //                    component                    //
 export default function QnaList() {
     //                    state                    //
-    const {loginUserRole} = useUserStore();
+    const { loginUserRole } = useUserStore();
 
+    const [cookies] = useCookies();
+
+    const [boardList, setBoardList] = useState<BoardListItem[]>([]); // ([]) 초기값 빈 배열
+    const [viewList, setViewList] = useState<BoardListItem[]>([]);
     const [totalLenght, setTotalLength] = useState<number>(0);
-    const [totalPage, setTotalPage] = useState<number>(0);
-    const [currentPage, setCurrentPage] = useState<number>(0);
+    const [totalPage, setTotalPage] = useState<number>(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageList, setPageList] = useState<number[]>([1]); // 초기값 1
+    const [totalSection, setTotalSection] = useState<number>(1);
+    const [currentSection, setCurrentSection] = useState<number>(1); // 초기값 1
     const [isToggleOn, setToggleOn] = useState<boolean>(false);
 
     //                    function                    //
     const navigator = useNavigate();
+
+    const getBoardListResponse = (result: GetBoardListResponseDto | ResponseDto | null) => {
+        const message =
+            !result ? '서버에 문제가 있습니다.' :
+                result.code = 'AF' ? '인증에 실패했습니다.' :
+                    result.code = 'DBE' ? '서버에 문제가 있습니다.' : '';
+
+        if (!result || result.code !== 'SU') {
+            alert(message);
+            if (result?.code === 'AF')
+                navigator(AUTH_ABSOLUTE_PATH);
+            return;
+        }
+        const { boardList } = result as GetBoardListResponseDto;
+        setBoardList(boardList); // ex 316
+
+        const totalLength = boardList.length;
+        setTotalLength(totalLength); // 316 대입
+
+        const totalPage = Math.floor((totalLenght - 1) / COUNT_PER_PAGE) + 1;
+        setTotalPage(totalPage);
+
+        const totalSection = Math.floor((totalPage - 1) / COUNT_PER_SECTION) + 1;
+        setTotalSection(totalSection);
+
+        const startIndex = (currentPage - 1) * COUNT_PER_PAGE;
+        let endIndex = currentPage * COUNT_PER_PAGE;
+        if (endIndex > totalLenght - 1) endIndex = totalLenght;
+        const viewList= boardList.slice(startIndex, endIndex);
+        setViewList(viewList);
+
+        const startPage = (currentSection * COUNT_PER_SECTION) - (COUNT_PER_SECTION -1);
+        let endPage = currentSection * COUNT_PER_SECTION ;
+        if (endPage > totalPage) endPage = totalPage;
+        const pageList:number[] = [];
+        for(let page = startPage; page <= endPage; page++){
+            pageList.push(page);
+            setPageList(pageList);
+        }
+        
+    };
 
     //                    event handler                    //
     const onWriteButtonClickHandler = () => {
@@ -27,7 +80,15 @@ export default function QnaList() {
         if (loginUserRole !== 'ROLE_ADMIN') return;
         setToggleOn(!isToggleOn);
     };
-    
+
+    //                    effect                    //
+    // 섹 션
+    useEffect(() => {
+        if (!cookies.accessToken) return; // 쿠키가 없다면 내보내기
+        getBoardListRequest(cookies.accessToken) // 쿠키가 있다면 작업 수행
+            .then(getBoardListResponse);
+    }, [])
+
     //                    render                    //
     const toggleClass = isToggleOn ? 'toggle-active' : 'toggle';
     return (
@@ -35,12 +96,12 @@ export default function QnaList() {
             <div className='qna-list-top'>
                 <div className='qna-list-size-text'>전체 <span className='emphasis'>{totalLenght}건</span> | 페이지 <span className='emphasis'>{currentPage}/{totalPage}</span></div>
                 <div className='qna-list-top-right'>
-                    {loginUserRole === 'ROLE_USER' ? 
-                    <div className='primary-button' onClick={onWriteButtonClickHandler}>글쓰기</div> :
-                    <>
-                    <div className={toggleClass} onClick={onToggleClickHandler}></div>
-                    <div className='qna-list-top-admin-text'>미완료 보기</div>
-                    </>
+                    {loginUserRole === 'ROLE_USER' ?
+                        <div className='primary-button' onClick={onWriteButtonClickHandler}>글쓰기</div> :
+                        <>
+                            <div className={toggleClass} onClick={onToggleClickHandler}></div>
+                            <div className='qna-list-top-admin-text'>미완료 보기</div>
+                        </>
                     }
                 </div>
             </div>
@@ -65,7 +126,7 @@ export default function QnaList() {
                 </div>
             </div>
             <div className='qna-list-bottom'>
-                <div style={{width:'299px'}}></div>
+                <div style={{ width: '299px' }}></div>
                 <div className='qna-list-pagenation'>
                     <div className='qna-list-page-left'></div>
                     <div className='qna-list-page-box'>
