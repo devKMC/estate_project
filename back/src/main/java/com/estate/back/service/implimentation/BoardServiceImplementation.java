@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.estate.back.dto.request.board.PostBoardRequestDto;
 import com.estate.back.dto.response.ResponseDto;
 import com.estate.back.dto.response.board.GetBoardListResponseDto;
+import com.estate.back.dto.response.board.GetSearchBoardListResponseDto;
 import com.estate.back.entity.BoardEntity;
 import com.estate.back.repository.BoardRepository;
 import com.estate.back.repository.UserRepository;
@@ -63,6 +64,21 @@ public class BoardServiceImplementation implements BoardService {
             return ResponseDto.databaseError();
         }
 
+    }
+
+
+    // 검 색 어 관 련
+    @Override
+    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardList(String searchWord) {
+
+        try{ //성 공 리 턴(밖이나 안이 상관 없음)
+            List<BoardEntity> boardEntities = boardRepository.findByTitleContainsOrderByReceptionNumberDesc(searchWord);
+            return GetSearchBoardListResponseDto.success(boardEntities);
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
     }
 
 
