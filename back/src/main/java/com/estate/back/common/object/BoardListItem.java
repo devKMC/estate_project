@@ -22,13 +22,13 @@ public class BoardListItem {
     // 생 성 자
     // 데이터베이스에서 전체 리스트를 조회하는 작업 - 결과로 List<BoardEntity> - List<BoardListItem>
     private BoardListItem(BoardEntity boardEntity) throws Exception{
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss"); 
-        Date datetime = simpleDateFormat.parse(boardEntity.getWriteDatetime());
-        simpleDateFormat = new SimpleDateFormat("yy.MM.dd"); // writerDatetime 형태 변환
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss"); // DB의 현재 타입
+        Date datetime = simpleDateFormat.parse(boardEntity.getWriteDatetime()); // String -> datetime으로 변경
+        simpleDateFormat = new SimpleDateFormat("yy.MM.dd"); // writerDatetime 형태로 변환
         String writeDatetime = simpleDateFormat.format(datetime); // 형태 변경후 writeDatetime으로 전달 YYYY-MM-dd hh:mm:ss -> yy.MM.dd
 
         String writerId = boardEntity.getWriterId(); // 엔티티에서 writeId 가져옴
-        writerId = writerId.substring(0,1) + "*".repeat(writerId.length()-1); // 첫번째 글자들만 가져와서 반복작업 진행 ex) 6글자면 -1 = 5
+        writerId = writerId.substring(0,1) + "*".repeat(writerId.length()-1); // 첫번째 글자들만 가져와서 반복작업 진행
 
         this.receptionNumber = boardEntity.getReceptionNumber();
         this.status = boardEntity.getStatus();
