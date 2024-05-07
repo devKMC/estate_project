@@ -24,7 +24,7 @@ export default function QnaDetail() {
                 <div className='qna-detail-comment-textarea-box'>
                     <textarea className='qna-detail-comment-texarea' placeholder='답글을 작성해주세요.' />
                 </div>
-                <div className='primary-button'></div>
+                <div className='primary-button'>답글달기</div>
             </div>
             <div className='qna-detail-comment-box'>
                 <div className='primary-bedge'>답변</div>
@@ -33,7 +33,7 @@ export default function QnaDetail() {
             <div className='qna-detail-button-box'>
                 <div className='primary-button'>목록보기</div>
                 <div className='qna-detail-owner-button-box'>
-                    <div className='secont-button'>수정</div>
+                    <div className='second-button'>수정</div>
                     <div className='error-button'>삭제</div>
                 </div>
             </div>

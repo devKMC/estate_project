@@ -24,10 +24,9 @@ import com.estate.back.service.AuthService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
-// Auth 모듈의 비즈니스 로직 구현체
 
 @Service // 이 클래스를 서비스 클래스로 사용하기 위함
-@RequiredArgsConstructor // 20번행의 의존성 주입을 위해 사용
+@RequiredArgsConstructor //의존성 주입을 위해 사용
 public class AuthServiceImplimentation implements AuthService {
 
     private final UserRepository userRepository;
@@ -40,6 +39,9 @@ public class AuthServiceImplimentation implements AuthService {
     // 패스워드 암호화를 하기 위해 password 인코더
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+
+    
+    // Auth 모듈의 비즈니스 로직 구현체
     @Override
     public ResponseEntity<ResponseDto> idCheck(IdCheckRequestDto dto) {
 

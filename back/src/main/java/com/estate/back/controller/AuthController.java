@@ -38,8 +38,8 @@ public class AuthController {
     }
 
     @PostMapping("/id-check")
-    public ResponseEntity<ResponseDto> idCheck(
-            @RequestBody @Valid IdCheckRequestDto requestBody) {
+    public ResponseEntity<ResponseDto> idCheck( // 클라이언트에게 응답을 보낼때 사용하는 ResponseEntity<ResponseDto>
+            @RequestBody @Valid IdCheckRequestDto requestBody) { // valid 유효성검사하는 기본 패키지
         ResponseEntity<ResponseDto> response = authService.idCheck(requestBody);
         return response;
     }
