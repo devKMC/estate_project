@@ -55,4 +55,9 @@ public class BoardEntity {
         this.writeDatetime = writeDatetime;
         
     }
+
+    // 조회수 1 증가 코드
+    public void increaseViewCount(){
+        this.viewCount++;
+    }
 }

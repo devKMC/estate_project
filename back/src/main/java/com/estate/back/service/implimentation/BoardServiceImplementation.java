@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.estate.back.dto.request.board.PostBoardRequestDto;
 import com.estate.back.dto.response.ResponseDto;
 import com.estate.back.dto.response.board.GetBoardListResponseDto;
+import com.estate.back.dto.response.board.GetBoardResponseDto;
 import com.estate.back.dto.response.board.GetSearchBoardListResponseDto;
 import com.estate.back.entity.BoardEntity;
 import com.estate.back.repository.BoardRepository;
@@ -79,6 +80,48 @@ public class BoardServiceImplementation implements BoardService {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
+    }
+
+
+    @Override
+    public ResponseEntity<? super GetBoardResponseDto> getBoard(int receptionNumber) {
+        
+        try{ // 데이터베이스내용을 가져오기
+
+            // board Entity와 null 이 들어올 수 있음
+            BoardEntity boardEntity = boardRepository.findByReceptionNumber(receptionNumber);
+            // 만약 null 이라면 유효성 검사를 통해 noExistBoard로 응답
+            if (boardEntity == null) return ResponseDto.noExistBoard();
+
+
+            return GetBoardResponseDto.success(boardEntity);
+
+        }catch(Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+    }
+
+
+    // 조회수 작업을 따로 직접 함
+    @Override
+    public ResponseEntity<ResponseDto> increaseViewCount(int receptionNumber) {
+
+        try{
+
+            BoardEntity boardEntity = boardRepository.findByReceptionNumber(receptionNumber);
+            if (boardEntity == null) return ResponseDto.noExistBoard(); // 만약 널이라면 없다는 표현을 반환
+
+            boardEntity.increaseViewCount();;
+            boardRepository.save(boardEntity); // 증가한 조회수를 엔티티를 불러와서 레포지토리에 저장
+
+        }catch(Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        // succeess exception 이없기때문에 직접 외부에서 성공 반환
+        return ResponseDto.success();
     }
 
 

@@ -16,8 +16,9 @@ package com.estate.back.dto.response;
 public interface ResponseMessage {
     String SUCCESS = "Success";
     String VALIDATION_FAILED = "Validation Failed";
-    String DUPLICATIED_ID = "Duplicated idl";
+    String DUPLICATIED_ID = "Duplicated id";
     String DUPLICATIED_EMAIL = "Sign in Failed";
+    String NO_EXIST_BOARD = "No Exist Board";
     String SIGN_INFAILED = "Sign in Faile";
     String AUTHENTICATION_FAILED = "Authentication Failed";
     String TOKEN_CREATION_FAILED = "Token creation Failed";
