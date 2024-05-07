@@ -112,7 +112,7 @@ public class BoardServiceImplementation implements BoardService {
             BoardEntity boardEntity = boardRepository.findByReceptionNumber(receptionNumber);
             if (boardEntity == null) return ResponseDto.noExistBoard(); // 만약 널이라면 없다는 표현을 반환
 
-            boardEntity.increaseViewCount();;
+            boardEntity.increaseViewCount();
             boardRepository.save(boardEntity); // 증가한 조회수를 엔티티를 불러와서 레포지토리에 저장
 
         }catch(Exception exception){

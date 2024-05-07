@@ -50,10 +50,10 @@ public class BoardEntity {
         this.writerId = userId;
         
 
-        this.viewCount = 0;
+
         // 10 (게시판)
         this.writeDatetime = writeDatetime;
-        
+        this.viewCount = 0;
     }
 
     // 조회수 1 증가 코드

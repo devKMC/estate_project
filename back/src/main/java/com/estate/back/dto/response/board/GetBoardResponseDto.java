@@ -16,8 +16,8 @@ public class GetBoardResponseDto extends ResponseDto {
     private Integer receptionNumber;
     private Boolean status;
     private String title;
-    private String wirterId;
-    private String wrtieDatetime;
+    private String writerId;
+    private String writeDatetime;
     private Integer viewCount;
     private String contents;
     private String comment;
@@ -29,8 +29,8 @@ public class GetBoardResponseDto extends ResponseDto {
         this.receptionNumber = boardEntity.getReceptionNumber();
         this.status = boardEntity.getStatus();
         this.title = boardEntity.getTitle();
-        this.wirterId = boardEntity.getWriterId();
-        this.wrtieDatetime = writeDatetime;
+        this.writerId = boardEntity.getWriterId();
+        this.writeDatetime = writeDatetime;
         this.viewCount = boardEntity.getViewCount();
         this.contents = boardEntity.getContents();
         this.comment = boardEntity.getComment();
