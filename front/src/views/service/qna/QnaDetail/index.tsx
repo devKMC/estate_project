@@ -79,10 +79,13 @@ export default function QnaDetail() {
     };
     
     //                    effect                    //
+    let flag = false;
     useEffect(() => {
         if (!cookies.accessToken || !receptionNumber) return;
+        if (flag) return;
         increaseViewCountRequest(receptionNumber, cookies.accessToken)
             .then(increaseViewCountResponse);
+        flag = true;
     }, []);
     
     //                    render                    //

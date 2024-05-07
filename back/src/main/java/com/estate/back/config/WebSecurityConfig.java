@@ -55,6 +55,7 @@ public class WebSecurityConfig {
                                                 .configurationSource(corsConfigurationSource()))
                                                 .authorizeHttpRequests(request -> request.requestMatchers("/","/api/v1/auth/**","/oauth2/callback/*").permitAll()// auth /이후로는 인증 없이 사용 가능/
                                                 .requestMatchers("api/v1/board/").hasRole("USER") // permitAll 뒤에 관리자에대한 권한 지정
+                                                .requestMatchers("api/v1/board/*/comment").hasRole("ADMIN")
                                                 .anyRequest().authenticated())
                                 .oauth2Login(oauth2 -> oauth2 
                                 // 카카오 네이버 API 경로 관련
