@@ -10,13 +10,13 @@ import { GetBoardListResponseDto, GetSearchBoardListResponseDto } from 'src/apis
 import ResponseDto from 'src/apis/response.dto';
 
 //                    component                    //
-function ListItem({
-    receptionNumber,
-    status,
-    title,
-    writerId,
-    writeDatetime,
-    viewCount
+function ListItem ({ 
+    receptionNumber, 
+    status, 
+    title, 
+    writerId, 
+    writeDatetime, 
+    viewCount 
 }: BoardListItem) {
 
     //                    function                    //
@@ -30,9 +30,9 @@ function ListItem({
         <div className='qna-list-table-tr' onClick={onClickHandler}>
             <div className='qna-list-table-reception-number'>{receptionNumber}</div>
             <div className='qna-list-table-status'>
-                {status ?
-                    <div className='disable-bedge'>완료</div> :
-                    <div className='primary-bedge'>접수</div>
+                {status ? 
+                <div className='disable-bedge'>완료</div> :
+                <div className='primary-bedge'>접수</div>
                 }
             </div>
             <div className='qna-list-table-title' style={{ textAlign: 'left' }}>{title}</div>
@@ -46,7 +46,7 @@ function ListItem({
 //                    component                    //
 export default function QnaList() {
     //                    state                    //
-    const { loginUserRole } = useUserStore();
+    const {loginUserRole} = useUserStore();
 
     const [cookies] = useCookies();
 
@@ -60,18 +60,18 @@ export default function QnaList() {
     const [currentSection, setCurrentSection] = useState<number>(1);
     const [isToggleOn, setToggleOn] = useState<boolean>(false);
 
-    const [searchWord, setSearchWord] = useState<string>(''); 
+    const [searchWord, setSearchWord] = useState<string>('');
 
     //                    function                    //
     const navigator = useNavigate();
 
-    const changePage = (boardList: BoardListItem[],totalLenght:number) => {
+    const changePage = (boardList: BoardListItem[], totalLenght: number) => {
         const startIndex = (currentPage - 1) * COUNT_PER_PAGE;
         let endIndex = currentPage * COUNT_PER_PAGE;
         if (endIndex > totalLenght - 1) endIndex = totalLenght;
         const viewList = boardList.slice(startIndex, endIndex);
         setViewList(viewList);
-    }
+    };
 
     const changeSection = (totalPage: number) => {
         const startPage = (currentSection * COUNT_PER_SECTION) - (COUNT_PER_SECTION - 1);
@@ -80,7 +80,7 @@ export default function QnaList() {
         const pageList: number[] = [];
         for (let page = startPage; page <= endPage; page++) pageList.push(page);
         setPageList(pageList);
-    }
+    };
 
     const changeBoardList = (boardList: BoardListItem[]) => {
         setBoardList(boardList);
@@ -97,13 +97,13 @@ export default function QnaList() {
         changePage(boardList, totalLenght);
 
         changeSection(totalPage);
-    }
+    };
 
     const getBoardListResponse = (result: GetBoardListResponseDto | ResponseDto | null) => {
-        const message =
+        const message = 
             !result ? '서버에 문제가 있습니다.' :
-                result.code === 'AF' ? '인증에 실패했습니다.' :
-                    result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
+            result.code === 'AF' ? '인증에 실패했습니다.' : 
+            result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
 
         if (!result || result.code !== 'SU') {
             alert(message);
@@ -112,17 +112,16 @@ export default function QnaList() {
         }
 
         const { boardList } = result as GetBoardListResponseDto;
-
         changeBoardList(boardList);
     };
 
-    const getSearchBoardListResponse = (result: GetBoardListResponseDto|ResponseDto|null)=>{
+    const getSearchBoardListResponse = (result: GetSearchBoardListResponseDto | ResponseDto | null) => {
 
         const message =
             !result ? '서버에 문제가 있습니다.' :
-            result.code = 'VF' ? '검색어를 입력하세요': 
-            result.code = 'AF' ? '인증에 실패했습니다.':
-            result.code = 'DBE' ? '서버에 문제가 있습니다': '';
+            result.code === 'VF' ? '검색어를 입력하세요.' : 
+            result.code === 'AF' ? '인증에 실패했습니다.' :
+            result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
 
         if (!result || result.code !== 'SU') {
             alert(message);
@@ -130,8 +129,11 @@ export default function QnaList() {
             return;
         }
 
-            const {boardList} = result as GetSearchBoardListResponseDto;
-            changeBoardList(boardList);
+        const { boardList } = result as GetSearchBoardListResponseDto;
+        changeBoardList(boardList);
+        setCurrentPage(1);
+        setCurrentSection(1);
+
     };
 
     //                    event handler                    //
@@ -147,7 +149,7 @@ export default function QnaList() {
 
     const onPageClickHandler = (page: number) => {
         setCurrentPage(page);
-    }
+    };
 
     const onPreSectionClickHandler = () => {
         if (currentSection === 1) return;
@@ -164,14 +166,14 @@ export default function QnaList() {
     const onSearchWordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const searchWord = event.target.value;
         setSearchWord(searchWord);
-    }
+    };
 
     const onSearchButtonClickHandler = () => {
         if (!searchWord) return;
         if (!cookies.accessToken) return;
 
         getSearchBoardListRequest(searchWord, cookies.accessToken).then(getSearchBoardListResponse);
-    }
+    };
 
     //                    effect                    //
     useEffect(() => {
@@ -180,28 +182,29 @@ export default function QnaList() {
     }, []);
 
     useEffect(() => {
-        if (boardList.length) return;
-        changePage(boardList,totalLenght);
+        if (!boardList.length) return;
+        changePage(boardList, totalLenght);
     }, [currentPage]);
 
     useEffect(() => {
+        if (!boardList.length) return;
         changeSection(totalPage);
-    }, [currentSection])
-
+    }, [currentSection]);
+    
     //                    render                    //
     const toggleClass = isToggleOn ? 'toggle-active' : 'toggle';
-    const searchButtonClass = searchWord ? 'primary-button' : 'disable-button'
+    const searchButtonClass = searchWord ? 'primary-button' : 'disable-button';
     return (
         <div id='qna-list-wrapper'>
             <div className='qna-list-top'>
                 <div className='qna-list-size-text'>전체 <span className='emphasis'>{totalLenght}건</span> | 페이지 <span className='emphasis'>{currentPage}/{totalPage}</span></div>
                 <div className='qna-list-top-right'>
-                    {loginUserRole === 'ROLE_USER' ?
-                        <div className='primary-button' onClick={onWriteButtonClickHandler}>글쓰기</div> :
-                        <>
-                            <div className={toggleClass} onClick={onToggleClickHandler}></div>
-                            <div className='qna-list-top-admin-text'>미완료 보기</div>
-                        </>
+                    {loginUserRole === 'ROLE_USER' ? 
+                    <div className='primary-button' onClick={onWriteButtonClickHandler}>글쓰기</div> :
+                    <>
+                    <div className={toggleClass} onClick={onToggleClickHandler}></div>
+                    <div className='qna-list-top-admin-text'>미완료 보기</div>
+                    </>
                     }
                 </div>
             </div>
@@ -221,17 +224,17 @@ export default function QnaList() {
                 <div className='qna-list-pagenation'>
                     <div className='qna-list-page-left' onClick={onPreSectionClickHandler}></div>
                     <div className='qna-list-page-box'>
-                        {pageList.map(page =>
-                            page === currentPage ?
-                                <div className='qna-list-page-active'>{page}</div> :
-                                <div className="qna-list-page" onClick={() => onPageClickHandler(page)}>{page}</div>
+                        {pageList.map(page => 
+                        page === currentPage ?
+                        <div className='qna-list-page-active'>{page}</div> :
+                        <div className='qna-list-page' onClick={() => onPageClickHandler(page)}>{page}</div>
                         )}
                     </div>
-                    <div className='qna-list-page-right'onClick={onNextSectionClickHandler}></div>
+                    <div className='qna-list-page-right' onClick={onNextSectionClickHandler}></div>
                 </div>
                 <div className='qna-list-search-box'>
                     <div className='qna-list-search-input-box'>
-                        <input className='qna-list-search-input'placeholder='검색어를 입력하세요.' value={searchWord} onChange={onSearchWordChangeHandler} />
+                        <input className='qna-list-search-input' placeholder='검색어를 입력하세요.' value={searchWord} onChange={onSearchWordChangeHandler} />
                     </div>
                     <div className={searchButtonClass} onClick={onSearchButtonClickHandler}>검색</div>
                 </div>

@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.estate.back.filter.JwtAuthenticationFilter;
-import com.estate.back.handler.OAuth2SuccessHandler;
+import com.estate.back.handler.OAuth2SuccessHandler;    
 import com.estate.back.service.implimentation.OAuth2UserServiceImplementation;
 
 import jakarta.servlet.ServletException;

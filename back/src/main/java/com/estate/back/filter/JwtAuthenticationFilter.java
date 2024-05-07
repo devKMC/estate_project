@@ -88,6 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
             securityContext.setAuthentication(authenticationToken);
 
+            //이 보안 컨텍스트에는 인증된 사용자 및 해당 사용자의 권한 등의 정보가 포함
             SecurityContextHolder.setContext(securityContext);
 
         } catch (Exception exception) {
