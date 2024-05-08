@@ -16,3 +16,4 @@ export const requestErrorHandler = (error: any) => {
 
 // function: Authorization Bearer 헤더
 export const bearerAuthorization = (accessToken: string) => ({ headers:{ 'Authorization': `Bearer ${accessToken}`} })
+

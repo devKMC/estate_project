@@ -8,7 +8,7 @@ export interface PostCommentRequestDto {
     comment : string;
 }
 
-export interface PutBoardRequsetDto {
+export interface PutBoardRequestDto {
     title: string;
     contents: string;
 }

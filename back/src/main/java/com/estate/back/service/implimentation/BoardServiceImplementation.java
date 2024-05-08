@@ -179,8 +179,8 @@ public class BoardServiceImplementation implements BoardService {
             if (boardEntity == null)  return ResponseDto.noExistBoard();
 
             String writerId = boardEntity.getWriterId(); // 아이디를 가져와서
-            boolean iswriter = userId.equals(writerId);  // 동일한지 확인
-            if(iswriter) return ResponseDto.authorizationFailed(); // 동일하지 않다면 실패 응답 처리
+            boolean iswriter = writerId.equals(userId);  // 동일한지 확인
+            if(!iswriter) return ResponseDto.authorizationFailed(); // 동일하지 않다면 실패 응답 처리
 
             boolean status = boardEntity.getStatus(); // 댓글이 작성 되어있는지 확인
             if(status) return ResponseDto.writtenComment(); // 작성 되어있는 경우

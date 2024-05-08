@@ -3,10 +3,11 @@ import './style.css'
 import { useUserStore } from 'src/stores';
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router';
-import { getBoardRequest } from 'src/apis/board';
+import { getBoardRequest, putBoardRequest } from 'src/apis/board';
 import { GetBoardResponseDto } from 'src/apis/board/dto/response';
 import ResponseDto from 'src/apis/response.dto';
-import { QNA_LIST_ABSOLUTE_PATH } from 'src/constant';
+import { QNA_DEATIL_ABSOLUTE_PATH, QNA_LIST_ABSOLUTE_PATH } from 'src/constant';
+import { PutBoardRequestDto } from 'src/apis/board/dto/request';
 
 //                    component                    //
 export default function QnaUpdate() {
@@ -38,13 +39,13 @@ export default function QnaUpdate() {
             return;
         }
 
-        const { writerId, title, contents , status } = result as GetBoardResponseDto;
+        const { writerId, title, contents, status } = result as GetBoardResponseDto;
         if (writerId !== loginUserId) {
             alert('권한이 없습니다.');
             navigator(QNA_LIST_ABSOLUTE_PATH);
             return;
         }
-        if (status){
+        if (status) {
             alert('답변이 완료된 게시물입니다.');
             navigator(QNA_LIST_ABSOLUTE_PATH);
             return;
@@ -53,6 +54,26 @@ export default function QnaUpdate() {
         setTitle(title);
         setContents(contents);
         setWriterId(writerId);
+
+    };
+
+    const putBoardResponse = (result: ResponseDto | null) => {
+
+        const message =
+            !result ? '서버에 문제가 있습니다.' :
+            result.code === 'AF' ? '권한이 없습니다.' :
+            result.code === 'VF' ? '모든 값을 입력해주세요.' :
+            result.code === 'NB' ? '존재하지 않는 접수 번호입니다.' :
+            result.code === 'WC' ? '이미 답글이 작성되어있습니다.' :
+            result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
+
+        if (!result || result.code !== 'SU') {
+            alert(message);
+            return;
+        }
+
+        if (!receptionNumber) return;
+        navigator(QNA_DEATIL_ABSOLUTE_PATH(receptionNumber));
 
     };
 
@@ -73,27 +94,26 @@ export default function QnaUpdate() {
     };
 
     const onUpdateButtonClickHandler = () => {
-        if (!title || !contents) return;
-        if (!cookies.accessToken) return;
+        if (!cookies.accessToken || !receptionNumber) return;
+        if (!title.trim() || !contents.trim()) return;
 
+        const requestBody: PutBoardRequestDto = { title, contents };
+        putBoardRequest(receptionNumber, requestBody, cookies.accessToken).then(putBoardResponse);
     };
 
     //                    effect                    //
-    // 개발자환경에서 2번씩 도는 시스템 변경
-    // false일때 돌고 , true로 바꿔서 빠져나가게끔 만들어서 1번만 돌게 만듬
     let effectFlag = false;
     useEffect(() => {
         if (!receptionNumber || !cookies.accessToken) return;
+        if (!loginUserRole) return;
         if (effectFlag) return;
         effectFlag = true;
-
         if (loginUserRole !== 'ROLE_USER') {
             navigator(QNA_LIST_ABSOLUTE_PATH);
             return;
         }
-
         getBoardRequest(receptionNumber, cookies.accessToken).then(getBoardResponse);
-    }, []);
+    }, [loginUserRole]);
     
     //                    render                    //
     return (

@@ -57,7 +57,7 @@ export default function QnAWrite() {
     }
 
     const onPostButtonClickHandler = () => {
-        if (!title || !contents) return; // 비어있으면 return
+        if (!title.trim() || !contents.trim()) return; // 비어있으면 return
         if (!cookies.accessToken) return;
 
         const requestBody: PostBoardRequestDto= {

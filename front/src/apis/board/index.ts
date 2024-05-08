@@ -1,10 +1,9 @@
 import axios from "axios";
-import { PostBoardRequestDto, PostCommentRequestDto, PutBoardRequsetDto } from "./dto/request";
+import { PostBoardRequestDto, PostCommentRequestDto, PutBoardRequestDto } from "./dto/request";
 import { DELETE_BOARD_URL, GET_BOARD_LIST_URL, GET_BOARD_URL, GET_SEARCH_BOARD_LIST_URL, INCREASE_VIEW_COUNT_URL, POST_BOARD_REQUEST_URL, POST_COMMENT_REQUEST_URL, PUT_BOARD_URL } from "src/constant";
 import { bearerAuthorization, requestErrorHandler, requestHandler } from "..";
 import ResponseDto from "../response.dto";
 import { GetBoardListResponseDto, GetBoardResponseDto, GetSearchBoardListResponseDto,  } from "./dto/response";
-
 
 // function : Q&A 작성 API 함수 
 export const PostBoardRequest = async(requestBody: PostBoardRequestDto, accessToken: string) => {
@@ -29,17 +28,15 @@ export const getBoardListRequest = async(accessToken: string) => { // 토큰을 
     .then(requestHandler<GetBoardListResponseDto>) //위에 코드가 성공한다면 <GetBoardListResponseDto> 받을 것이고
     .catch(requestErrorHandler); // 실패한다면 에러
     return result;
-
 }
 
 // function : Q&A 검색 리스트 불러오기 API 함수
-export const getSearchBoardListRequest = async(searchWord:string, accessToken:string) => { //searchWord 먼저 받고 ,accessToken 받기
-    const result = await axios.get(GET_SEARCH_BOARD_LIST_URL(searchWord),bearerAuthorization(accessToken))
+export const getSearchBoardListRequest = async(word:string, accessToken:string) => { //searchWord 먼저 받고 ,accessToken 받기
+    const config = {...bearerAuthorization(accessToken), params: {word}} // params 속성 추가해서 수정함.
+    const result = await axios.get(GET_SEARCH_BOARD_LIST_URL,config)
     .then(requestHandler<GetSearchBoardListResponseDto>) // 성공
     .catch(requestErrorHandler); // 실패
     return result;
-
-
 }
 
 // function : Q&A 게시물 불러오기 API 함수
@@ -51,13 +48,12 @@ export const getBoardRequest = async(receptionNumber:number | string, accessToke
 }
 
 // function : Q&A 게시물 수정 API 함수
-export const putBoardRequest = async(receptionNumber: number | string, requestBody: PutBoardRequsetDto , accessToken:string) =>{
+export const putBoardRequest = async(receptionNumber: number | string, requestBody: PutBoardRequestDto , accessToken:string) =>{
     const result = await axios.put(PUT_BOARD_URL(receptionNumber), requestBody, bearerAuthorization(accessToken))
     .then(requestHandler<ResponseDto>)
-    .catch(requestErrorHandler)
+    .catch(requestErrorHandler);
     return result;
 }
-
 
 // function : Q&A 게시물 조회수 증가 API 함수
 export const increaseViewCountRequest = async (receptionNumber: number | string, accessToken: string) => {

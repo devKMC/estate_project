@@ -77,6 +77,12 @@ public class ResponseDto {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
     }
 
+    public static ResponseEntity<ResponseDto> notFound() {
+        ResponseDto responseBody = new ResponseDto(ResponseCode.NOT_FOUND,
+        ResponseMessage.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+    }
+
     // 500번 상태메세지 status에 넣어 준다.
     public static ResponseEntity<ResponseDto> tokenCreationFailed() {
         ResponseDto responseBody = new ResponseDto(ResponseCode.TOKEN_CREATION_FAILED,
