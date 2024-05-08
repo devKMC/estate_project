@@ -71,6 +71,12 @@ public class ResponseDto {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
     }
 
+    public static ResponseEntity<ResponseDto> authorizationFailed() {
+        ResponseDto responseBody = new ResponseDto(ResponseCode.AUTHORIZATION_FAILED,
+        ResponseMessage.AUTHORIZATION_FAILED);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
+    }
+
     // 500번 상태메세지 status에 넣어 준다.
     public static ResponseEntity<ResponseDto> tokenCreationFailed() {
         ResponseDto responseBody = new ResponseDto(ResponseCode.TOKEN_CREATION_FAILED,

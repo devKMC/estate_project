@@ -143,4 +143,29 @@ public class BoardServiceImplementation implements BoardService {
         return ResponseDto.success();
     }
 
+    @Override
+    public ResponseEntity<ResponseDto> deleteBoard(int receptionNumber, String userId) {
+
+
+        try{
+
+            // 접수 번호가 존재하는지 확인
+            BoardEntity boardEntity = boardRepository.findByReceptionNumber(receptionNumber);
+            if (boardEntity == null) return ResponseDto.noExistBoard();
+
+            //작성자 아이디가 게시물 작성 아이디와 같은지 확인
+            String writerId= boardEntity.getWriterId();
+            boolean iswriter=userId.equals(writerId);
+            if (!iswriter) return ResponseDto.authorizationFailed();
+
+            // 위에 작업들 거친후 삭제는 delete 사용
+            boardRepository.delete(boardEntity);
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
+
+        return ResponseDto.success();
+    }
+
 }

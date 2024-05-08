@@ -83,6 +83,7 @@ export default function QnaList() {
     };
 
     const changeBoardList = (boardList: BoardListItem[]) => {
+        if(isToggleOn)boardList = boardList.filter((board) => {return board.status});// 배열에서 콜백함수로 전달 받아 아이템, 인덱스 전달 받을 수 있으나 아이템만 받는 코드 /boolean 
         setBoardList(boardList);
 
         const totalLenght = boardList.length;
@@ -113,6 +114,9 @@ export default function QnaList() {
 
         const { boardList } = result as GetBoardListResponseDto;
         changeBoardList(boardList);
+
+        setCurrentPage(1);
+        setCurrentSection(1);
     };
 
     const getSearchBoardListResponse = (result: GetSearchBoardListResponseDto | ResponseDto | null) => {
@@ -176,10 +180,11 @@ export default function QnaList() {
     };
 
     //                    effect                    //
+    // 완료 미완료
     useEffect(() => {
         if (!cookies.accessToken) return;
         getBoardListRequest(cookies.accessToken).then(getBoardListResponse);
-    }, []);
+    }, [isToggleOn]);
 
     useEffect(() => {
         if (!boardList.length) return;
