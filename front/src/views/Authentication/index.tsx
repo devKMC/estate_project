@@ -1,26 +1,13 @@
-// React 및 필수 라이브러리 가져오기:
-
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import "./style.css";
 
-//이미지 가져오기:
 import SignInBackground from 'src/assets/image/sign-in-background.png';
 import SignUpBackground from 'src/assets/image/sign-up-background.png';
-
-// 컴포넌트 가져오기:
 import InputBox from "src/components/Inputbox";
-
-// 인증 API 요청 DTO 가져오기:
 import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, SignInRequestDto, SignUpRequestDto } from "src/apis/auth/dto/request";
-
-// 인증 API 가져오기:
-import { IdCheckRequest, SignInRequest, emailAuthCheckRequest, emailAuthRequest, signUpRequest } from "src/apis/auth";
-
-// 응답 DTO 가져오기:
+import { IdCheckRequest, emailAuthCheckRequest, emailAuthRequest, SignInRequest, signUpRequest } from "src/apis/auth";
 import ResponseDto from "src/apis/response.dto";
 import { SignInResponseDto } from "src/apis/auth/dto/response";
-
-// 쿠키 및 라우팅 관련 라이브러리 가져오기:
 import { useCookies } from "react-cookie";
 import { useNavigate, useParams } from "react-router";
 import { LOCAL_ABSOLUTE_PATH } from "src/constant";
@@ -126,6 +113,11 @@ function SignIn({ onLinkClickHandler }: Props) {
         setMessage('');
     };
 
+    const onPasswordKeydownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key !== 'Enter') return;
+        onSignInButtonClickHandler();
+    };
+
     const onSignInButtonClickHandler = () => {
         
         if (!id || !password) {
@@ -146,7 +138,7 @@ function SignIn({ onLinkClickHandler }: Props) {
         <div className="authentication-contents">
             <div className="authentication-input-container">
                 <InputBox label="아이디" type="text" value={id} placeholder="아이디를 입력해주세요" onChangeHandler={onIdChangeHandler} />
-                <InputBox label="비밀번호" type="password" value={password} placeholder="비밀번호를 입력해주세요" onChangeHandler={onPasswordChangeHandler} message={message} error />
+                <InputBox label="비밀번호" type="password" value={password} placeholder="비밀번호를 입력해주세요" onChangeHandler={onPasswordChangeHandler} onkeydownhandler={onPasswordKeydownHandler} message={message} error />
             </div>
             <div className="authentication-button-container">
                 <div className="primary-button full-width" onClick={onSignInButtonClickHandler}>로그인</div>
