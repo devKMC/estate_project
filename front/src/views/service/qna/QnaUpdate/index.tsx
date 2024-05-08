@@ -33,13 +33,19 @@ export default function QnaUpdate() {
             result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
         
         if (!result || result.code !== 'SU') {
+            alert(message);
             navigator(QNA_LIST_ABSOLUTE_PATH);
             return;
         }
 
-        const { writerId, title, contents } = result as GetBoardResponseDto;
+        const { writerId, title, contents , status } = result as GetBoardResponseDto;
         if (writerId !== loginUserId) {
             alert('권한이 없습니다.');
+            navigator(QNA_LIST_ABSOLUTE_PATH);
+            return;
+        }
+        if (status){
+            alert('답변이 완료된 게시물입니다.');
             navigator(QNA_LIST_ABSOLUTE_PATH);
             return;
         }
@@ -73,8 +79,13 @@ export default function QnaUpdate() {
     };
 
     //                    effect                    //
+    // 개발자환경에서 2번씩 도는 시스템 변경
+    // false일때 돌고 , true로 바꿔서 빠져나가게끔 만들어서 1번만 돌게 만듬
+    let effectFlag = false;
     useEffect(() => {
         if (!receptionNumber || !cookies.accessToken) return;
+        if (effectFlag) return;
+        effectFlag = true;
         getBoardRequest(receptionNumber, cookies.accessToken).then(getBoardResponse);
     }, []);
     

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.estate.back.dto.request.board.PostBoardRequestDto;
 import com.estate.back.dto.request.board.PostCommentRequestDto;
+import com.estate.back.dto.request.board.PutBoardRequsetDto;
 import com.estate.back.dto.response.ResponseDto;
 import com.estate.back.dto.response.board.GetBoardListResponseDto;
 import com.estate.back.dto.response.board.GetBoardResponseDto;
@@ -165,6 +166,33 @@ public class BoardServiceImplementation implements BoardService {
             exception.printStackTrace();
         }
 
+        return ResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto> putBoard(PutBoardRequsetDto dto, int receptionNumber, String userId) {
+
+
+        try{
+
+            BoardEntity boardEntity = boardRepository.findByReceptionNumber(receptionNumber); // 접수번호 가져오기
+            if (boardEntity == null)  return ResponseDto.noExistBoard();
+
+            String writerId = boardEntity.getWriterId(); // 아이디를 가져와서
+            boolean iswriter = userId.equals(writerId);  // 동일한지 확인
+            if(iswriter) return ResponseDto.authorizationFailed(); // 동일하지 않다면 실패 응답 처리
+
+            boolean status = boardEntity.getStatus(); // 댓글이 작성 되어있는지 확인
+            if(status) return ResponseDto.writtenComment(); // 작성 되어있는 경우
+
+            boardEntity.update(dto); // BoardEntity에 따로 적어놓고 이 코드 작성
+            boardRepository.save(boardEntity); // 저장하기
+
+
+        }catch(Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
         return ResponseDto.success();
     }
 

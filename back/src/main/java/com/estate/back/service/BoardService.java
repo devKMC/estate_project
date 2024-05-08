@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.estate.back.dto.request.board.PostBoardRequestDto;
 import com.estate.back.dto.request.board.PostCommentRequestDto;
+import com.estate.back.dto.request.board.PutBoardRequsetDto;
 import com.estate.back.dto.response.ResponseDto;
 import com.estate.back.dto.response.board.GetBoardListResponseDto;
 import com.estate.back.dto.response.board.GetBoardResponseDto;
@@ -23,6 +24,8 @@ public interface BoardService {
 
     // UPDATE
     ResponseEntity<ResponseDto> increaseViewCount(int receptionNumber);
+    
+    ResponseEntity<ResponseDto>putBoard (PutBoardRequsetDto dto, int receptionNumber,String userId);
 
     // DELETE
     ResponseEntity<ResponseDto> deleteBoard(int receptionNumber,String userId); //접수번호와, 접근 주체의 아이디
