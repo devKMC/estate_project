@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import './style.css'
 import { useUserStore } from 'src/stores';
-import { getBoardRequest, increaseViewCountRequest, PostCommentRequest } from 'src/apis/board';
+import { deleteBoardRequest, getBoardRequest, increaseViewCountRequest, PostCommentRequest } from 'src/apis/board';
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router';
 import ResponseDto from 'src/apis/response.dto';
@@ -86,12 +86,12 @@ export default function QnaDetail() {
     const postCommentResponse = (result: ResponseDto | null) => {
 
         const message =
-            !result ? '서버에 문제가 있습니다.' :
-                result.code === 'AF' ? '권한이 없습니다.' :
-                    result.code === 'VF' ? '입력 데이터가 올바르지 않습니다.' :
-                        result.code === 'NB' ? '존재하지 않는 게시물입니다.' :
-                            result.code === 'WC' ? '이미 답글이 작성된 게시물입니다.' :
-                                result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
+        !result ? '서버에 문제가 있습니다.' :
+        result.code === 'AF' ? '권한이 없습니다.' :
+        result.code === 'VF' ? '입력 데이터가 올바르지 않습니다.' :
+        result.code === 'NB' ? '존재하지 않는 게시물입니다.' :
+        result.code === 'WC' ? '이미 답글이 작성된 게시물입니다.' :
+        result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
 
         if (!result || result.code !== 'SU') {
             alert(message);
@@ -102,6 +102,24 @@ export default function QnaDetail() {
         getBoardRequest(receptionNumber, cookies.accessToken).then(getBoardResponse);
 
     };
+
+    const deleteBoardResponse = (result: ResponseDto | null) => {
+
+        const message =
+        !result ? '서버에 문제가 있습니다.' :
+        result.code === 'AF' ? '권한이 없습니다.' :
+        result.code === 'VF' ? '올바르지 않은 접수 번호입니다.' :
+        result.code === 'NB' ? '존재하지 않는 접수 번호입니다.' :
+        result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
+
+        if (!result || result.code !== 'SU'){
+            alert(message);
+            return;
+        }
+
+        // 삭제되면 그 게시물에 있으면 안되기 때문에 목록 페이지로 이동
+        navigator(QNA_LIST_ABSOLUTE_PATH);
+    }
 
     //                    event handler                    //
     const onCommentChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -134,11 +152,12 @@ export default function QnaDetail() {
 
     // 삭제
     const onDeleteClickHandler = () => {
-        if (!receptionNumber || loginUserId !== writerId) return;
+        if (!receptionNumber || loginUserId !== writerId || !cookies.accessToken) return;
         const isConfirm = window.confirm('정말로 삭제하시겠습니까?');
         if (!isConfirm) return;
 
-        alert('삭제');
+        deleteBoardRequest(receptionNumber, cookies.accessToken) 
+        .then(deleteBoardResponse)
     }
 
     //                    effect                    //
