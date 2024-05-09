@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './style.css'
 import SelectBox from 'src/components/selectbox';
-import {  CategoryScale, Chart as ChartJS,  LineElement, LinearScale, PointElement, Title, Tooltip } from 'chart.js';
+import {  CategoryScale, Chart as ChartJS,  LineElement, LinearScale, PointElement, Ticks, Title, Tooltip } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
@@ -9,7 +9,6 @@ ChartJS.register(
     LinearScale,
     PointElement,
     LineElement,
-    Title,
     Tooltip,
 );
 
@@ -19,17 +18,18 @@ ChartJS.register(
 export default function Local() {
 
     const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top' as const,
-            },
-            title: {
-                display: true,
-                text: 'Chart.js Bar Chart',
-            },
+        responsive: false,
+        scales: {
+            y: {
+                min:150,
+                max:300,
+                ticks: {
+                    stepSize:30
+                }
+            }
+        }
     }
-}
+
     //                                       state                                           //
     const [selectLocal, setSelectLocal] = useState<string>('');
 
@@ -38,7 +38,7 @@ export default function Local() {
         setSelectLocal(selectLocal);
     };
 
-    const saleData = 
+    const saleOptions = 
         {
             labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',],
             datasets:[{
@@ -49,7 +49,7 @@ export default function Local() {
             }]
         }
     
-        const leaseData = 
+        const leaseOptions = 
         {
             labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',],
             datasets:[{
@@ -60,7 +60,7 @@ export default function Local() {
             }]
         }
     
-        const monthData = 
+        const monthRentOprions = 
         {
             labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',],
             datasets:[{
@@ -88,7 +88,7 @@ export default function Local() {
                     <div className="local-card-unit">(단위: 백만원)</div>
                 </div>
                 <div className="lcoal-card-chart-box">
-                    <Line  options={options} data={saleData}></Line>
+                    <Line width={'1086px'} height={'238px'} options={options} data={saleOptions}></Line>
                 </div>
             </div>
             <div className="local-card">
@@ -97,7 +97,7 @@ export default function Local() {
                     <div className="local-card-unit">(단위: 백만원)</div>
                 </div>
                 <div className="lcoal-card-chart-box">
-                    <Line  options={options} data={leaseData}></Line>
+                    <Line width={'1086px'} height={'238px'} options={options} data={leaseOptions}></Line>
                 </div>
             </div>
             <div className="local-card">
@@ -106,7 +106,7 @@ export default function Local() {
                     <div className="local-card-unit">(단위: 백만원)</div>
                 </div>
                 <div className="lcoal-card-chart-box">
-                    <Line  options={options} data={monthData}></Line>
+                    <Line width={'1086px'} height={'238px'} options={options} data={monthRentOprions}></Line>
                 </div>
             </div>
         </div>
