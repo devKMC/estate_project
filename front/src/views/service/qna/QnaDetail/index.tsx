@@ -34,11 +34,11 @@ export default function QnaDetail() {
 
     const increaseViewCountResponse = (result: ResponseDto | null) => {
         const message =
-            !result ? '서버에 문제가 있습니다.' :
-                result.code === 'VF' ? '잘못된 접수번호입니다.' :
-                    result.code === 'AF' ? '인증에 실패했습니다.' :
-                        result.code === 'NB' ? '존재하지 않는 접수번호입니다.' :
-                            result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
+        !result ? '서버에 문제가 있습니다.' :
+        result.code === 'VF' ? '잘못된 접수번호입니다.' :
+        result.code === 'AF' ? '인증에 실패했습니다.' :
+        result.code === 'NB' ? '존재하지 않는 접수번호입니다.' :
+        result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
 
         if (!result || result.code !== 'SU') {
             alert(message);
@@ -57,11 +57,11 @@ export default function QnaDetail() {
 
     const getBoardResponse = (result: GetBoardResponseDto | ResponseDto | null) => {
         const message =
-            !result ? '서버에 문제가 있습니다.' :
-                result.code === 'VF' ? '잘못된 접수번호입니다.' :
-                    result.code === 'AF' ? '인증에 실패했습니다.' :
-                        result.code === 'NB' ? '존재하지 않는 접수번호입니다.' :
-                            result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
+        !result ? '서버에 문제가 있습니다.' :
+        result.code === 'VF' ? '잘못된 접수번호입니다.' :
+        result.code === 'AF' ? '인증에 실패했습니다.' :
+        result.code === 'NB' ? '존재하지 않는 접수번호입니다.' :
+        result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
 
         if (!result || result.code !== 'SU') {
             alert(message);
