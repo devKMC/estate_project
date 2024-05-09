@@ -16,5 +16,51 @@
     align-items: center; /*수직 중앙 정렬 */
 }
 
+.local-origin-text {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 130%;
+
+    color: rgba(138, 146, 166, 1);
+}
+
+.local-card{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    border: 1px solid rgba(238, 238, 238, 1);
+    border-radius: 8px;
+    padding: 24px;
+    background-color: white;
+}
+
+.local-card-title-box{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.local-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    
+    color: rgb(142, 44, 44);
+}
+
+.local-card-unit {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 130%;
+    
+
+    color: rgba(165, 42, 42, 0.716);
+}
+
+.lcoal-card-chart-box {
+    height: 238px;
+    
+}
+
 /* .select-box {} 는 페이지마다 공통이기에 다른곳에 작성  component - selectbox - index.tsx / style.css*/
 
