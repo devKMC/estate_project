@@ -1,0 +1,19 @@
+#local-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.local-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: end; /* 교차축 기준 끝 지점 */
+}
+
+.local-search-box {
+    display: flex;
+    gap: 12px;
+    align-items: center; /*수직 중앙 정렬 */
+}
+
+/* .select-box {} 는 페이지마다 공통이기에 다른곳에 작성  component - selectbox - index.tsx / style.css*/
