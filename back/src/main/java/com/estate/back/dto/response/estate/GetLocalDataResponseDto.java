@@ -34,7 +34,7 @@ public class GetLocalDataResponseDto extends ResponseDto {
 
                 for (GetLocalDataResultSet resultSet: resultSets){
                         String originalDate = resultSet.getYearMonth();
-                        yearMonth.add(ChangeDateFormatUtil.changeYYYYMM(originalDate));
+                        yearMonth.add(ChangeDateFormatUtil.changeYYMM(originalDate));
                         
                         sale.add(resultSet.getSale());
                         lease.add(resultSet.getSale());

@@ -23,7 +23,7 @@ public class ChangeDateFormatUtil {
         return writeDatetime;
     }
 
-    public static String changeYYYYMM(String original) throws Exception {
+    public static String changeYYMM(String original) throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date datetime = simpleDateFormat.parse(original);
         simpleDateFormat = new SimpleDateFormat("yy-MM");

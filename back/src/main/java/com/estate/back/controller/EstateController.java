@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.estate.back.dto.response.estate.GetLocalDataResponseDto;
 import com.estate.back.service.EstateService;
 
-
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,8 +22,8 @@ public class EstateController {
     public ResponseEntity<? super GetLocalDataResponseDto> getLocalData (
         @PathVariable("local") String local
     ) {
-
         ResponseEntity<? super GetLocalDataResponseDto> response = estateService.getLocalData(local);
         return response;
     }
+
 }

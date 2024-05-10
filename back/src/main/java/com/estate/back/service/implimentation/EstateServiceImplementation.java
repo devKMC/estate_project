@@ -1,5 +1,7 @@
 package com.estate.back.service.implimentation;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +10,7 @@ import com.estate.back.dto.response.estate.GetLocalDataResponseDto;
 import com.estate.back.repository.EstateRepository;
 import com.estate.back.repository.resultSet.GetLocalDataResultSet;
 import com.estate.back.service.EstateService;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,14 +23,14 @@ public class EstateServiceImplementation implements EstateService {
     public ResponseEntity<? super GetLocalDataResponseDto> getLocalData(String local) {
         
         try {
-            List<GetLocalDataResultSet> resultSet = estateRepository.getLocalData(local);
-            return GetLocalDataResponseDto.success(resultSet);
+
+            List<GetLocalDataResultSet> resultSets = estateRepository.getLocalData(local);
+            return GetLocalDataResponseDto.success(resultSets);
 
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
-
 
     }
 
