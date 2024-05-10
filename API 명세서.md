@@ -1476,3 +1476,133 @@ Content-Type: application/json;charset=UTF-8
 ```
 
 ***
+<h2 style='background-color: rgba(55, 55, 55, 0.2); text-align: center'>estate 모듈</h2>
+
+오피스텔 부동산 가격 정보와 관련된 REST API 모듈
+지역 평균 데이터, 비율 관련 데이터 API가 포함 되어 있습니다.
+
+
+#### - 지역 평균 데이터 불러오기
+  
+##### 설명
+
+클라이언트로부터 Request Header의 Authorization 필드로 Bearer 토큰을 포함하여 접수 번호, 제목, 지역을 입력받고 불러오기에 성공하면 성공처리를 합니다. (매매가,전세가,월세 보증금 데이터의 단위는 천원)만약 수정에 실패하면 실패처리 됩니다. 인가 실패, 데이터베이스 에러, 데이터 유효성 검사 실패가 발생할 수 있습니다.
+
+<!-- PUT은 전체 , patch는 일부 느낌으로 -->
+- method : **GET**  
+- URL : **/{receptionNumber}**  
+
+##### Request
+
+###### Header
+
+| name | description | required |
+|---|:---:|:---:|
+| Authorization | 인증에 사용될 Bearer 토큰 | O |
+
+###### Path Variable
+
+| name | type | description | required |
+|---|:---:|:---:|:---:|
+| local | String | 조회할 지역 | O |
+
+
+###### Example
+
+```bash
+curl -v -X PUT "http://localhost:4000/api/v1/estate/local/{local}" \
+ -H "Authorization: Bearer {JWT}" 
+```
+
+##### Response
+
+###### Header
+
+| name | description | required |
+|---|:---:|:---:|
+| Content-Type | 반환하는 Response Body의 Content Type (application/json) | O |
+
+###### Response Body
+
+| name | type | description | required |
+|---|:---:|:---:|:---:|
+| code | String | 결과 코드 | O |
+| message | String | 결과 메세지 | O |
+|  year_month | String[] | 연월 리스트 | O |
+|  sale | String[] | 매매가 리스트 | O |
+|  lease | String[] | 전세가 리스트 | O |
+| month_rent | String[] | 월세 보증금 리스트 | O |
+
+###### Example
+
+**응답 성공**
+```bash
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "SU",
+  "message": "Success.",
+  "yearMonth" : ['01','01','01','01','01','01','01'....,'12'],
+  "sale" : ['1000','1000','1000','1000','1000'.... ,'4621' ],
+}
+```
+
+**응답 : 실패 (데이터 유효성 검사 실패)**
+```bash
+HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "VF",
+  "message": "Validation Failed."
+}
+```
+
+**응답 : 실패 (인가 실패)**
+```bash
+HTTP/1.1 403 Forbidden
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "AF",
+  "message": "Authorization Failed."
+}
+```
+**응답 : 실패 (존재하지 않는 게시물)**
+```bash
+HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "AF",
+  "message": "No exist Board."
+}
+```
+**응답 : 실패 (답변 완료된 게시물)**
+```bash
+HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "WC",
+  "message": "Written Comment."
+}
+```
+
+**응답 : 실패 (권한 없음)**
+```bash
+HTTP/1.1 403 Forbidden
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "AF",
+  "message": "Authorization Failed."
+}
+```
+
+**응답 : 실패 (데이터베이스 오류)**
+```bash
+HTTP/1.1 500 Internal Server Error
+Content-Type: application/json;charset=UTF-8
+{
+  "code": "DBE",
+  "message": "Database Error."
+}
+```
+
+***
