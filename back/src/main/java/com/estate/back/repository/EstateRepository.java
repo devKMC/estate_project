@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.estate.back.entity.EstateEntity;
 import com.estate.back.repository.resultSet.GetLocalDataResultSet;
+import com.estate.back.repository.resultSet.GetRatioDataResultSet;
 
 @Repository
 public interface EstateRepository extends JpaRepository<EstateEntity, Integer> { // EstateEntity 를 가져오는데 타입을 Integer
@@ -41,6 +42,6 @@ public interface EstateRepository extends JpaRepository<EstateEntity, Integer> {
     "AND `local` = 'BUSAN'; ",
     nativeQuery=true
     )
-    List<GetLocalDataResultSet> getRatioData (@Param("local")String local);
+    List<GetRatioDataResultSet> getRatioData (@Param("local")String local);
 
 }

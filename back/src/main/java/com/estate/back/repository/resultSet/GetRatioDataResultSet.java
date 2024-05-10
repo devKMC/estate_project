@@ -3,7 +3,7 @@ package com.estate.back.repository.resultSet;
 import java.util.List;
 
 public interface GetRatioDataResultSet {
-    String getyearMonth();
+    String getYearMonth();
 
     Double getReturn40();
     Double getReturn4060();
