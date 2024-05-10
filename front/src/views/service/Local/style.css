@@ -3,6 +3,9 @@
 #local-wrapper {
     margin: 0 auto;
     width: 1182px;
+    min-height: 800px;
+
+    position: relative;
 
     display: flex;
     flex-direction: column;
@@ -65,6 +68,19 @@
 .lcoal-card-chart-box {
     height: 238px;
     width: 100%;
+}
+
+.local-no-data-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%); /*화면 중앙*/
+
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 175%;
+    color: rgba(138, 146, 166, 1);
 }
 
 /* .select-box {} 는 페이지마다 공통이기에 다른곳에 작성  component - selectbox - index.tsx / style.css*/

@@ -24,4 +24,6 @@ public interface EstateRepository extends JpaRepository<EstateEntity, Integer> {
     nativeQuery=true
     )
     List<GetLocalDataResultSet> getLocalData(@Param("local") String local);
+    
 }
+
